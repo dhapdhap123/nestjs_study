@@ -7,6 +7,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Board } from './board.entity';
 import { Repository } from 'typeorm';
 import { UpdateBoardDTO } from './dto/update-board.dto';
+import { DeleteBoardResponse } from './dto/response/delete-board.response';
 
 @Injectable()
 export class BoardsService {
@@ -38,10 +39,10 @@ export class BoardsService {
     return this.boardRepository.updateBoard(id, updateBoardDTO);
   }
 
-  async deleteBoard(id: number): Promise<void> {
-    // const found = await this.getBoardById(id);
+  async deleteBoard(id: number): Promise<DeleteBoardResponse> {
+    await this.boardRepository.delete(id);
 
-    this.boardRepository.delete(id);
+    return { delete: 'success' };
   }
   // getAllBoards(): Board[] {
   //   return this.boards;

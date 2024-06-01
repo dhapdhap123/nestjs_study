@@ -18,6 +18,7 @@ import { BoardStatus } from './board-status.type';
 import { BoardRepository } from './boards.repository';
 import { Board } from './board.entity';
 import { UpdateBoardDTO } from './dto/update-board.dto';
+import { DeleteBoardResponse } from './dto/response/delete-board.response';
 
 @Controller('boards')
 export class BoardsController {
@@ -65,8 +66,9 @@ export class BoardsController {
   }
 
   @Delete('/:id')
-  deleteBoard(@Param('id') id: number): void {
-    this.boardsService.deleteBoard(id);
+  deleteBoard(@Param('id') id: number): Promise<DeleteBoardResponse> {
+    const result = this.boardsService.deleteBoard(id);
+    return result;
   }
   // @Get()
   // getAllBoard(): Board[] {
