@@ -10,7 +10,7 @@ import { Repository } from 'typeorm';
 @Injectable()
 export class BoardsService {
   constructor(
-    @InjectRepository(Board)
+    @InjectRepository(BoardRepository)
     private boardRepository: Repository<Board>,
   ) {}
 
