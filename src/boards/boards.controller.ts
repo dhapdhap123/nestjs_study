@@ -17,6 +17,7 @@ import { BoardStatusValidationPipe } from './pipes/board-status-validation.pipe'
 import { BoardStatus } from './board-status.enum';
 import { BoardRepository } from './boards.repository';
 import { Board } from './board.entity';
+import { UpdateBoardDTO } from './dto/update-board.dto';
 
 @Controller('boards')
 export class BoardsController {
@@ -25,16 +26,11 @@ export class BoardsController {
     private boardsService: BoardsService,
   ) {}
 
-  // @Get()
-  // getAllBoard(): Board[] {
-  //   return this.boardsService.getAllBoards();
-  // }
-
-  // @Post()
-  // @UsePipes(ValidationPipe)
-  // createBoard(@Body() createBoardDTO: CreateBoardDTO): Board {
-  //   return this.boardsService.createBoard(createBoardDTO);
-  // }
+  @Post()
+  @UsePipes(ValidationPipe)
+  createBoard(@Body() createBoardDTO: CreateBoardDTO): Promise<Board> {
+    return this.boardsService.createBoard(createBoardDTO);
+  }
 
   @Get()
   getAllBoard(): Promise<Board[]> {
@@ -46,16 +42,42 @@ export class BoardsController {
     return this.boardsService.getBoardById(id);
   }
 
+  @Patch('/:id/status')
+  @UsePipes(ValidationPipe)
+  updateBoardStatus(
+    @Param('id') id: number,
+    @Body('status') status: BoardStatus,
+  ): Promise<Board> {
+    const updatedBoard = this.boardsService.updateBoardStatus(id, status);
+
+    return updatedBoard;
+  }
+
+  @Patch('/:id/update')
+  @UsePipes(ValidationPipe)
+  updateBoard(
+    @Param('id') id: number,
+    @Body() updateBoardDTO: UpdateBoardDTO,
+  ): Promise<Board> {
+    const updatedBoard = this.boardsService.updateBoard(id, updateBoardDTO);
+
+    return updatedBoard;
+  }
+
   @Delete('/:id')
   deleteBoard(@Param('id') id: number): void {
     this.boardsService.deleteBoard(id);
   }
+  // @Get()
+  // getAllBoard(): Board[] {
+  //   return this.boardsService.getAllBoards();
+  // }
 
-  @Post()
-  @UsePipes(ValidationPipe)
-  createBoard(@Body() createBoardDTO: CreateBoardDTO): Promise<Board> {
-    return this.boardsService.createBoard(createBoardDTO);
-  }
+  // @Post()
+  // @UsePipes(ValidationPipe)
+  // createBoard(@Body() createBoardDTO: CreateBoardDTO): Board {
+  //   return this.boardsService.createBoard(createBoardDTO);
+  // }
 
   // @Delete('/:id')
   // deleteBoard(@Param('id') id: string): void {

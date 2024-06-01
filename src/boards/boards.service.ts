@@ -6,6 +6,7 @@ import { BoardRepository } from './boards.repository';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Board } from './board.entity';
 import { Repository } from 'typeorm';
+import { UpdateBoardDTO } from './dto/update-board.dto';
 
 @Injectable()
 export class BoardsService {
@@ -13,6 +14,18 @@ export class BoardsService {
     @InjectRepository(BoardRepository)
     private boardRepository: Repository<Board>,
   ) {}
+  async createBoard(createBoardDTO: CreateBoardDTO) {
+    const { title, description } = createBoardDTO;
+
+    const board = this.boardRepository.create({
+      title,
+      description,
+      status: BoardStatus.PUBLIC,
+    });
+
+    await this.boardRepository.save(board);
+    return board;
+  }
 
   async getAllBoard(): Promise<Board[]> {
     const found = await this.boardRepository.find();
@@ -34,23 +47,32 @@ export class BoardsService {
     return found;
   }
 
+  async updateBoardStatus(id: number, status: BoardStatus): Promise<Board> {
+    const board = await this.getBoardById(id);
+    board.status = status;
+
+    await this.boardRepository.save(board);
+    return board;
+  }
+
+  async updateBoard(
+    id: number,
+    updateBoardDTO: UpdateBoardDTO,
+  ): Promise<Board> {
+    const { title, description } = updateBoardDTO;
+
+    const board = await this.getBoardById(id);
+    board.title = title;
+    board.description = description;
+
+    await this.boardRepository.save(board);
+    return board;
+  }
+
   async deleteBoard(id: number): Promise<void> {
     // const found = await this.getBoardById(id);
 
     this.boardRepository.delete(id);
-  }
-
-  async createBoard(createBoardDTO: CreateBoardDTO) {
-    const { title, description } = createBoardDTO;
-
-    const board = this.boardRepository.create({
-      title,
-      description,
-      status: BoardStatus.PUBLIC,
-    });
-
-    await this.boardRepository.save(board);
-    return board;
   }
   // getAllBoards(): Board[] {
   //   return this.boards;
