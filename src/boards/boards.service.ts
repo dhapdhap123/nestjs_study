@@ -12,19 +12,11 @@ import { UpdateBoardDTO } from './dto/update-board.dto';
 export class BoardsService {
   constructor(
     @InjectRepository(BoardRepository)
-    private boardRepository: Repository<Board>,
+    private boardRepository: BoardRepository,
   ) {}
-  async createBoard(createBoardDTO: CreateBoardDTO) {
-    const { title, description } = createBoardDTO;
 
-    const board = this.boardRepository.create({
-      title,
-      description,
-      status: 'PRIVATE',
-    });
-
-    await this.boardRepository.save(board);
-    return board;
+  createBoard(createBoardDTO: CreateBoardDTO): Promise<Board> {
+    return this.boardRepository.createBoard(createBoardDTO);
   }
 
   async getAllBoard(): Promise<Board[]> {
