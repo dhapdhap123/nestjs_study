@@ -3,23 +3,20 @@ import {
   BadRequestException,
   PipeTransform,
 } from '@nestjs/common';
-import { BoardStatus } from '../board-status.enum';
+import { BoardStatus } from '../board-status.type';
 
 export class BoardStatusValidationPipe implements PipeTransform {
-  readonly StatusOptions = [BoardStatus.PRIVATE, BoardStatus.PUBLIC];
-
   transform(value: any, metadata: ArgumentMetadata) {
     value = value.toUpperCase();
 
-    if (!this.isStatusValid(value)) {
+    if (!this.isStatusType(value)) {
       throw new BadRequestException(`${value} isn't in the status`);
     }
 
     return value;
   }
 
-  private isStatusValid(status: any) {
-    const index = this.StatusOptions.indexOf(status);
-    return index !== -1;
+  private isStatusType(status: any): status is BoardStatus {
+    return status === 'PRIVATE' || status === 'PUBLIC';
   }
 }

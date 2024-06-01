@@ -14,7 +14,7 @@ import {
 import { BoardsService } from './boards.service';
 import { CreateBoardDTO } from './dto/create-board.dto';
 import { BoardStatusValidationPipe } from './pipes/board-status-validation.pipe';
-import { BoardStatus } from './board-status.enum';
+import { BoardStatus } from './board-status.type';
 import { BoardRepository } from './boards.repository';
 import { Board } from './board.entity';
 import { UpdateBoardDTO } from './dto/update-board.dto';
@@ -46,7 +46,7 @@ export class BoardsController {
   @UsePipes(ValidationPipe)
   updateBoardStatus(
     @Param('id') id: number,
-    @Body('status') status: BoardStatus,
+    @Body('status', BoardStatusValidationPipe) status: BoardStatus,
   ): Promise<Board> {
     const updatedBoard = this.boardsService.updateBoardStatus(id, status);
 

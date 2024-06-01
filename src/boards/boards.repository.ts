@@ -1,7 +1,7 @@
 import { DataSource, Repository } from 'typeorm';
 import { Board } from './board.entity';
 import { CreateBoardDTO } from './dto/create-board.dto';
-import { BoardStatus } from './board-status.enum';
+import { BoardStatus } from './board-status.type';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()

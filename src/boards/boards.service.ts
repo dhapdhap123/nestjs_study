@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { BoardStatus } from './board-status.enum';
+import { BoardStatus } from './board-status.type';
 import { v1 as uuid } from 'uuid';
 import { CreateBoardDTO } from './dto/create-board.dto';
 import { BoardRepository } from './boards.repository';
@@ -20,7 +20,7 @@ export class BoardsService {
     const board = this.boardRepository.create({
       title,
       description,
-      status: BoardStatus.PUBLIC,
+      status: 'PRIVATE',
     });
 
     await this.boardRepository.save(board);
