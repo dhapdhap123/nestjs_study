@@ -2,7 +2,8 @@ import { DataSource, Repository } from 'typeorm';
 import { Board } from './board.entity';
 import { CreateBoardDTO } from './dto/create-board.dto';
 import { BoardStatus } from './board-status.type';
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { UpdateBoardDTO } from './dto/update-board.dto';
 
 @Injectable()
 export class BoardRepository extends Repository<Board> {
@@ -18,6 +19,50 @@ export class BoardRepository extends Repository<Board> {
       description,
       status: 'PUBLIC',
     });
+
+    await this.save(board);
+    return board;
+  }
+
+  async getAllBoard(): Promise<Board[]> {
+    const boards = await this.find();
+
+    if (!boards) {
+      throw new NotFoundException(`There is no board`);
+    }
+
+    return boards;
+  }
+
+  async getBoardById(id: number): Promise<Board> {
+    const found = await this.findOne({ where: { id: id } });
+
+    if (!found) {
+      throw new NotFoundException(`Can't find Board with ${id}`);
+    }
+
+    return found;
+  }
+
+  async updateBoard(
+    id: number,
+    updateBoardDTO: UpdateBoardDTO,
+  ): Promise<Board> {
+    const { title, description } = updateBoardDTO;
+
+    const board = await this.getBoardById(id);
+
+    board.title = title;
+    board.description = description;
+
+    await this.save(board);
+
+    return board;
+  }
+
+  async updateBoardStatus(id: number, status: BoardStatus): Promise<Board> {
+    const board = await this.getBoardById(id);
+    board.status = status;
 
     await this.save(board);
     return board;

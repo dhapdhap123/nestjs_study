@@ -20,45 +20,22 @@ export class BoardsService {
   }
 
   async getAllBoard(): Promise<Board[]> {
-    const found = await this.boardRepository.find();
-
-    if (!found) {
-      throw new NotFoundException(`There is no board`);
-    }
-
-    return found;
+    return this.boardRepository.getAllBoard();
   }
 
   async getBoardById(id: number): Promise<Board> {
-    const found = await this.boardRepository.findOne({ where: { id: id } });
-
-    if (!found) {
-      throw new NotFoundException(`Can't find Board with ${id}`);
-    }
-
-    return found;
+    return this.boardRepository.getBoardById(id);
   }
 
   async updateBoardStatus(id: number, status: BoardStatus): Promise<Board> {
-    const board = await this.getBoardById(id);
-    board.status = status;
-
-    await this.boardRepository.save(board);
-    return board;
+    return this.boardRepository.updateBoardStatus(id, status);
   }
 
   async updateBoard(
     id: number,
     updateBoardDTO: UpdateBoardDTO,
   ): Promise<Board> {
-    const { title, description } = updateBoardDTO;
-
-    const board = await this.getBoardById(id);
-    board.title = title;
-    board.description = description;
-
-    await this.boardRepository.save(board);
-    return board;
+    return this.boardRepository.updateBoard(id, updateBoardDTO);
   }
 
   async deleteBoard(id: number): Promise<void> {
