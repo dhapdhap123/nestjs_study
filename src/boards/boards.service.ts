@@ -20,22 +20,19 @@ export class BoardsService {
     return this.boardRepository.createBoard(createBoardDTO);
   }
 
-  async getAllBoard(): Promise<Board[]> {
+  getAllBoard(): Promise<Board[]> {
     return this.boardRepository.getAllBoard();
   }
 
-  async getBoardById(id: number): Promise<Board> {
+  getBoardById(id: number): Promise<Board> {
     return this.boardRepository.getBoardById(id);
   }
 
-  async updateBoardStatus(id: number, status: BoardStatus): Promise<Board> {
+  updateBoardStatus(id: number, status: BoardStatus): Promise<Board> {
     return this.boardRepository.updateBoardStatus(id, status);
   }
 
-  async updateBoard(
-    id: number,
-    updateBoardDTO: UpdateBoardDTO,
-  ): Promise<Board> {
+  updateBoard(id: number, updateBoardDTO: UpdateBoardDTO): Promise<Board> {
     return this.boardRepository.updateBoard(id, updateBoardDTO);
   }
 
