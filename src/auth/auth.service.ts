@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { UserRepository } from './user.repository';
 import { AuthCredentialDTO } from './dto/auth-credential.dto';
 import { User } from './user.entity';
+import { SignUpResponse } from './dto/response/signup-response';
 
 @Injectable()
 export class AuthService {
@@ -11,9 +12,7 @@ export class AuthService {
     private userRepository: UserRepository,
   ) {}
 
-  singUp(authCredentialDTO: AuthCredentialDTO): Promise<User> {
-    const user = this.userRepository.createUser(authCredentialDTO);
-
-    return user;
+  singUp(authCredentialDTO: AuthCredentialDTO): Promise<SignUpResponse> {
+    return this.userRepository.createUser(authCredentialDTO);
   }
 }
