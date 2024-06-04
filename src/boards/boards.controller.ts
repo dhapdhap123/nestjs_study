@@ -41,14 +41,14 @@ export class BoardsController {
     return this.boardsService.getAllBoards();
   }
 
-  @Get('/:id')
-  getBoardById(@Param('id', ParseIntPipe) id: number): Promise<Board> {
-    return this.boardsService.getBoardById(id);
-  }
-
   @Get('/specific')
   getAllBoardsFromUser(@GetUser() user: User): Promise<Board[]> {
     return this.boardsService.getAllBoardsFromUser(user);
+  }
+
+  @Get('/:id')
+  getBoardById(@Param('id', ParseIntPipe) id: number): Promise<Board> {
+    return this.boardsService.getBoardById(id);
   }
 
   @Patch('/:id/status')
