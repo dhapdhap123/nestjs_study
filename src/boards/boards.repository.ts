@@ -4,6 +4,7 @@ import { CreateBoardDTO } from './dto/create-board.dto';
 import { BoardStatus } from './board-status.type';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { UpdateBoardDTO } from './dto/update-board.dto';
+import { User } from 'src/auth/user.entity';
 
 @Injectable()
 export class BoardRepository extends Repository<Board> {
@@ -11,24 +12,40 @@ export class BoardRepository extends Repository<Board> {
     super(Board, dataSource.createEntityManager());
   }
 
-  async createBoard(createBoardDTO: CreateBoardDTO): Promise<Board> {
+  async createBoard(
+    createBoardDTO: CreateBoardDTO,
+    user: User,
+  ): Promise<Board> {
     const { title, description } = createBoardDTO;
 
     const board = this.create({
       title,
       description,
       status: 'PUBLIC',
+      user,
     });
 
     await this.save(board);
     return board;
   }
 
-  async getAllBoard(): Promise<Board[]> {
+  async getAllBoards(): Promise<Board[]> {
     const boards = await this.find();
 
     if (!boards) {
       throw new NotFoundException(`There is no board`);
+    }
+
+    return boards;
+  }
+
+  async getAllBoardsFromUser(user: User): Promise<Board[]> {
+    const boards = await this.find({ where: { user } });
+
+    if (!boards) {
+      throw new NotFoundException(
+        `There is no board written by user ${user.id}`,
+      );
     }
 
     return boards;

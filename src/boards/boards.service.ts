@@ -8,6 +8,7 @@ import { Board } from './board.entity';
 import { Repository } from 'typeorm';
 import { UpdateBoardDTO } from './dto/update-board.dto';
 import { DeleteBoardResponse } from './dto/response/delete-board.response';
+import { User } from 'src/auth/user.entity';
 
 @Injectable()
 export class BoardsService {
@@ -16,12 +17,16 @@ export class BoardsService {
     private boardRepository: BoardRepository,
   ) {}
 
-  createBoard(createBoardDTO: CreateBoardDTO): Promise<Board> {
-    return this.boardRepository.createBoard(createBoardDTO);
+  createBoard(createBoardDTO: CreateBoardDTO, user: User): Promise<Board> {
+    return this.boardRepository.createBoard(createBoardDTO, user);
   }
 
-  getAllBoard(): Promise<Board[]> {
-    return this.boardRepository.getAllBoard();
+  getAllBoards(): Promise<Board[]> {
+    return this.boardRepository.getAllBoards();
+  }
+
+  getAllBoardsFromUser(user: User): Promise<Board[]> {
+    return this.boardRepository.getAllBoardsFromUser(user);
   }
 
   getBoardById(id: number): Promise<Board> {
