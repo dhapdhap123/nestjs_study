@@ -7,6 +7,7 @@ import { SignUpResponse } from './dto/response/signup-response';
 import * as bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
 import { SignInResponse } from './dto/response/signin-response';
+import { JwtStrategy } from './jwt-strategy';
 
 @Injectable()
 export class AuthService {
@@ -14,6 +15,7 @@ export class AuthService {
     @InjectRepository(UserRepository)
     private userRepository: UserRepository,
     private jwtService: JwtService,
+    private jwtStrategy: JwtStrategy,
   ) {}
 
   singUp(authCredentialDTO: AuthCredentialDTO): Promise<SignUpResponse> {
