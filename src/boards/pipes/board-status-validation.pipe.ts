@@ -7,6 +7,9 @@ import { BoardStatus } from '../board-status.type';
 
 export class BoardStatusValidationPipe implements PipeTransform {
   transform(value: any, metadata: ArgumentMetadata) {
+    if (!value) {
+      throw new BadRequestException(`status required`);
+    }
     value = value.toUpperCase();
 
     if (!this.isStatusType(value)) {

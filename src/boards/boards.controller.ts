@@ -21,6 +21,7 @@ import { DeleteBoardResponse } from './dto/response/delete-board.response';
 import { GetUser } from 'src/auth/get-user.decorator';
 import { User } from 'src/auth/user.entity';
 import { AuthGuard } from '@nestjs/passport';
+import { CreateBoardResponse } from './dto/response/create-board.response';
 
 @Controller('boards')
 @UseGuards(AuthGuard('jwt'))
@@ -32,7 +33,7 @@ export class BoardsController {
   createBoard(
     @Body() createBoardDTO: CreateBoardDTO,
     @GetUser() user: User,
-  ): Promise<Board> {
+  ): Promise<CreateBoardResponse> {
     return this.boardsService.createBoard(createBoardDTO, user);
   }
 
@@ -56,8 +57,9 @@ export class BoardsController {
   updateBoardStatus(
     @Param('id', ParseIntPipe) id: number,
     @Body('status', BoardStatusValidationPipe) status: BoardStatus,
+    @GetUser() user: User,
   ): Promise<Board> {
-    const updatedBoard = this.boardsService.updateBoardStatus(id, status);
+    const updatedBoard = this.boardsService.updateBoardStatus(id, status, user);
 
     return updatedBoard;
   }
@@ -67,8 +69,13 @@ export class BoardsController {
   updateBoard(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateBoardDTO: UpdateBoardDTO,
+    @GetUser() user: User,
   ): Promise<Board> {
-    const updatedBoard = this.boardsService.updateBoard(id, updateBoardDTO);
+    const updatedBoard = this.boardsService.updateBoard(
+      id,
+      updateBoardDTO,
+      user,
+    );
 
     return updatedBoard;
   }
@@ -76,8 +83,9 @@ export class BoardsController {
   @Delete('/:id')
   deleteBoard(
     @Param('id', ParseIntPipe) id: number,
+    @GetUser() user: User,
   ): Promise<DeleteBoardResponse> {
-    const result = this.boardsService.deleteBoard(id);
+    const result = this.boardsService.deleteBoard(id, user);
     return result;
   }
 }

@@ -9,6 +9,7 @@ import { Repository } from 'typeorm';
 import { UpdateBoardDTO } from './dto/update-board.dto';
 import { DeleteBoardResponse } from './dto/response/delete-board.response';
 import { User } from 'src/auth/user.entity';
+import { CreateBoardResponse } from './dto/response/create-board.response';
 
 @Injectable()
 export class BoardsService {
@@ -17,7 +18,10 @@ export class BoardsService {
     private boardRepository: BoardRepository,
   ) {}
 
-  createBoard(createBoardDTO: CreateBoardDTO, user: User): Promise<Board> {
+  createBoard(
+    createBoardDTO: CreateBoardDTO,
+    user: User,
+  ): Promise<CreateBoardResponse> {
     return this.boardRepository.createBoard(createBoardDTO, user);
   }
 
@@ -33,17 +37,23 @@ export class BoardsService {
     return this.boardRepository.getBoardById(id);
   }
 
-  updateBoardStatus(id: number, status: BoardStatus): Promise<Board> {
-    return this.boardRepository.updateBoardStatus(id, status);
+  updateBoardStatus(
+    id: number,
+    status: BoardStatus,
+    user: User,
+  ): Promise<Board> {
+    return this.boardRepository.updateBoardStatus(id, status, user);
   }
 
-  updateBoard(id: number, updateBoardDTO: UpdateBoardDTO): Promise<Board> {
-    return this.boardRepository.updateBoard(id, updateBoardDTO);
+  updateBoard(
+    id: number,
+    updateBoardDTO: UpdateBoardDTO,
+    user: User,
+  ): Promise<Board> {
+    return this.boardRepository.updateBoard(id, updateBoardDTO, user);
   }
 
-  async deleteBoard(id: number): Promise<DeleteBoardResponse> {
-    await this.boardRepository.delete(id);
-
-    return { delete: 'success' };
+  deleteBoard(id: number, user: User): Promise<DeleteBoardResponse> {
+    return this.boardRepository.deleteBoard(id, user);
   }
 }

@@ -2,6 +2,7 @@ import {
   BaseEntity,
   Column,
   Entity,
+  JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -22,9 +23,13 @@ export class Board {
   @Column()
   status: BoardStatus;
 
+  @Column()
+  userId: number;
+
   @ManyToOne((type) => User, (user) => user.boards, {
     eager: false,
     onDelete: 'CASCADE',
   })
+  @JoinColumn({ name: 'userId' })
   user: User;
 }
